@@ -1,12 +1,12 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
+#include <cstring>
 
 using namespace std;
 
 //  {Название ценной бумаги; Количество сделок; Объём торгов}.
-
-#include<iostream>
+#include <iostream>
 using namespace std;
 class Node {
 public:
@@ -69,7 +69,6 @@ public:
             {
                 h = newnode;
                 newnode->next = h;
-                cout << "Первый элемент добавлен" << endl;
             }
             else
             {
@@ -80,95 +79,56 @@ public:
                 }
                 pointer->next = newnode;
                 newnode->next = h;
-                cout << "Элемент добавлен" << endl;
             }
+            EndProgramm();
         }
     }
-    void DeleteNode(int datavalue, int c)
+    void DeleteNode(string k) // deleting node 
     {
-        setlocale(LC_ALL, "rus");
-        Node* pointer = h;
-        if (h != NULL) {
-            do {
-                if (c == 1 and pointer->data1 == datavalue) {
-                    if (pointer == h) {
-                        if (h->next == h)
-                        {
-                            h = NULL;
-                        }
-                        else
-                        {
-                            Node* pointer1 = h;
-                            while (pointer1->next != h)
-                            {
-                                pointer1 = pointer1->next;
-                            }
-                            pointer1->next = h->next;
-                            h = h->next;
-                        }
-                    }
-                    //else {
-                    //    Node* tmp = NULL;
-                    //    Node* prevpointer = h;
-                    //    Node* currentpointer = h->next;
-                    //    while (currentpointer != NULL)
-                    //    {
-                    //        if (currentpointer->data1 == datavalue)
-                    //        {
-                     //           tmp = currentpointer;
-                     //           currentpointer = NULL;
-                    //        }
-                    //        else
-                    //        {
-                    //            prevpointer = prevpointer->next;
-                    //            currentpointer = currentpointer->next;
-                    //        }
-                    //    }
-                    //    prevpointer->next = tmp->next;
-                   // }
+        Node* pointer = NodeExists(k);
+        if (pointer == NULL)
+        {
+            cout << "Такого элемента не существует" << endl;
+        }
+        else
+        {
+            if (pointer == h)
+            {
+                if (h->next == h)
+                {
+                    h = NULL;
                 }
-                else {
-                    if (pointer == h) {
-                        if (c == 2 and datavalue == pointer->data2) {
-                            if (h->next == h)
-                            {
-                                h = NULL;
-                            }
-                            else
-                            {
-                                Node* pointer1 = h;
-                                while (pointer1->next != h)
-                                {
-                                    pointer1 = pointer1->next;
-                                }
-                                pointer1->next = h->next;
-                                h = h->next;
-                            }
-                        }
+                else
+                {
+                    Node* pointer1 = h;
+                    while (pointer1->next != h)
+                    {
+                        pointer1 = pointer1->next;
                     }
-                    else {
-                        Node* tmp = NULL;
-                        Node* prevpointer = h;
-                        Node* currentpointer = h->next;
-                        while (currentpointer != NULL)
-                        {
-                            if (currentpointer->data2 == datavalue)
-                            {
-                                tmp = currentpointer;
-                                currentpointer = NULL;
-                            }
-                            else
-                            {
-                                prevpointer = prevpointer->next;
-                                currentpointer = currentpointer->next;
-                            }
-                        }
-                        prevpointer->next = tmp->next;
+                    pointer1->next = h->next;
+                    h = h->next;
+                }
+            }
+            else
+            {
+                Node* tmp = NULL;
+                Node* prevpointer = h;
+                Node* currentpointer = h->next;
+                while (currentpointer != NULL)
+                {
+                    if (currentpointer->key == k)
+                    {
+                        tmp = currentpointer;
+                        currentpointer = NULL;
+                    }
+                    else
+                    {
+                        prevpointer = prevpointer->next;
+                        currentpointer = currentpointer->next;
                     }
                 }
-                pointer = pointer->next;
-            } while (pointer != h);
-            cout << "Элементы удалены";
+                prevpointer->next = tmp->next;
+            }
         }
     }
     void UpdateNode(int newdata1, int newdata2) 
@@ -181,11 +141,12 @@ public:
                 pointer->data2 = newdata2;
                 pointer = pointer->next;
             } while (pointer != h);
-            cout << "Значения обновлены";
+            cout << "Значения обновлены" << endl << endl;
+            EndProgramm();
         }
         else
         {
-            cout << "Список пуст" << endl;
+            cout << "Список пуст" << endl << endl;
         }
     }
     void DisplayList()
@@ -202,10 +163,50 @@ public:
             do
             {
                 cout << "[" << tmp->key << ", " << tmp->data1 << ", " << tmp->data2 << "] ----> ";
+                
                 tmp = tmp->next;
             } while (tmp != h);
         }
         cout << endl << endl;
+        EndProgramm();
+    }
+    void DeleteAll(int data, int c) {
+        setlocale(LC_ALL, "rus");
+        if (h == NULL)
+        {
+            cout << "Список пуст" << endl;
+        }
+        else
+        {
+            Node* tmp = h;
+            do
+            {
+                if ((c == 1 and tmp->data1 == data) or (c == 2 and tmp->data2 == data)) {
+                    DeleteNode(tmp->key);
+                }
+                tmp = tmp->next;
+            } while (tmp != h);
+        }
+        EndProgramm();
+        cout << "Операция завершена" << endl << endl;
+    }
+    void EndProgramm() {
+        setlocale(LC_ALL, "rus");
+        ofstream fout("laba6.txt");
+        if (h == NULL)
+        {
+            cout << "Список пуст" << endl;
+        }
+        else
+        {
+            Node* tmp = h;
+            do
+            {
+                fout << tmp->key << " " << tmp->data1 << " " << tmp->data2 << " ";
+
+                tmp = tmp->next;
+            } while (tmp != h);
+        }
     }
 };
 
@@ -216,6 +217,26 @@ int main() {
     string keyvalue{};
     string kvalue{};
     int datavalue1,datavalue2, datavalue;
+
+    ifstream in("laba6.txt");
+    string Name;
+    if (!in.is_open())
+        cout << "Файл невозможно открыть. Завершаю работу." << endl;
+    else {
+        while (!in.eof())
+        {
+            Node* node1 = new Node();
+            in >> Name;
+            in >> datavalue1;
+            in >> datavalue2;
+            node1->key = Name;
+            node1->data1 = datavalue1;
+            node1->data2 = datavalue2;
+            c.AppendNode(node1);
+        }
+    }
+    in.close();
+
     do
     {
         cout << "Введите номер, чтобы выполнить операцию с кольцевым однонаправленным списком" << endl;
@@ -223,11 +244,14 @@ int main() {
         cout << "2 -- Печать всех элементов" << endl;
         cout << "3 -- Удаление всех элементов равных определенному значению" << endl;
         cout << "4 -- Присвоение всем элементам одного значения" << endl;
-        cout << "Любая другая -- Завершить работу" << endl;
+        cout << "Буквы или 0 -- Завершить работу" << endl;
         cout << endl;
         cin >> op;
         Node* node1 = new Node();
         switch (op) {
+        case 0:
+            cout << "Завершение работы" << endl;
+            break;
         case 1:
             cout << "Введите название ценной бумаги НА АНГЛИЙСКОМ ЯЗЫКЕ" << endl;
             cin >> keyvalue;
@@ -239,6 +263,7 @@ int main() {
             node1->data1 = datavalue1;
             node1->data2 = datavalue2;
             c.AppendNode(node1);
+            cout << "Операция завершена" << endl << endl;
             break;
         case 2:
             c.DisplayList();
@@ -251,13 +276,13 @@ int main() {
             if (a == 1) {
                 cout << "Введите количество сделок, элементы с которым нужно удалить " << endl;
                 cin >> datavalue;
-                c.DeleteNode(datavalue, 1);
+                c.DeleteAll(datavalue, 1);
             }
             else {
                 if (a == 2) {
                     cout << "Введите объем торгов, элементы с которым нужно удалить " << endl;
                     cin >> datavalue;
-                    c.DeleteNode(datavalue, 2);
+                    c.DeleteAll (datavalue, 2);
                 }
                 else {
                     cout << "Ошибка ввода" << endl;
@@ -276,5 +301,6 @@ int main() {
         }
     } 
     while (op != 0);
+    c.EndProgramm();
     return 0;
 }
